@@ -1,7 +1,7 @@
 # set default if you want to run local. set astra if you want to run on astra
 # in case of spring_profiles_active=default no need to provide astra configs
 # default or astra
-spring_profiles_active=astra
+spring_profiles_active=default
 
 # pulsar (local) configuration
 pulsar_service_url=pulsar://host.docker.internal:6650

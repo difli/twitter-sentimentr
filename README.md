@@ -4,9 +4,7 @@ Sentiment analysis of twitter tweets powered by spring boot based applications a
 - local installation of apache cassandra and pulsar or
 - Astra DB and Astra Streaming.
 
-![GitHub Logo](/images/twitter.png)
-
-boot-twitter-feeder and boot-twitter-visualizer spring boot applications.
+![alt text](/images/twitter-sentimentr.png) 
 
 [twitter-reader](/twitter-reader):
 - consumes a [filtered stream of tweets from twitter api](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule)

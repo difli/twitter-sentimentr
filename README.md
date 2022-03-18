@@ -4,7 +4,7 @@ Sentiment analysis of twitter tweets powered by spring boot based applications a
 - local installation of apache cassandra and pulsar or
 - Astra DB and Astra Streaming.
 
-![alt text](/images/twitter-sentimentr.png) 
+![alt text](/images/twitter-sentimentr.png)
 
 [twitter-reader](/twitter-reader):
 - consumes a [filtered stream of tweets from twitter api](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule)
@@ -31,8 +31,8 @@ Sentiment analysis of twitter tweets powered by spring boot based applications a
 - visualizes tweets and the calculated sentiment
 
 # Prerequisites
-
-Please, create a twitter developer account in order to edit your [credentials](your-input-files/twitter-credentials.json.TEMPLATE) for accessing the twitter api:  https://developer.twitter.com/en/apps. remove extension '.TEMPLATE' from the file   
+- please, create a twitter developer account in order to edit your [credentials](your-input-files/twitter-credentials.json.TEMPLATE) for accessing the twitter api:  https://developer.twitter.com/en/apps. remove extension '.TEMPLATE' from the file
+- you can adapt [twitter filtered stream rule](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule). Define it [here](env-file-docker.TEMPLATE). This to define a pattern for tweets to collect from twitter.   
 
 # Quickstart: local environment setup  
 - download [apache cassandra](https://dlcdn.apache.org/cassandra/4.0.3/apache-cassandra-4.0.3-bin.tar.gz)
@@ -77,12 +77,12 @@ docker pull dieterfl/twitter-sentimentr-en-service:latest
 docker pull dieterfl/twitter-ui:latest
 docker pull dieterfl/twitter-reader:latest
 ```
-- review [env-file-docker](env-file-docker.TEMPLATE) and remove the '.TEMPLATE' extension - no need to change anything else right now
+- review [env-file-docker](env-file-docker.TEMPLATE) and remove the '.TEMPLATE' extension - ensure spring profile 'default' is configured
 - start your applications
 ```
 sh run-apps-in-docker.sh
 ```
-- once the applications are up and running try to connect your browser to twitter-ui vi http://localhost:8081
+- once the applications are up and running try to connect your browser to twitter-ui via browser: http://localhost:8081
 - create a connectors folder in the pulsar base folder
 ```
 mkdir connectors
@@ -106,4 +106,67 @@ bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/developmen
 workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/local-function-config.yaml
 ```
 - Done !!!
-- You should now see Tweets in appearing http://localhost:8081
+- You should now see tweets appearing http://localhost:8081  
+
+# Quickstart: powered by Astra   
+- create your astra account: https://astra.datastax.com/
+- create database with keyspace 'twitter'
+- use cql concole and create table
+```
+CREATE TABLE twitter.tweet_by_lang (
+    lang text,
+    createdat text,
+    id text,
+    sentiment int,
+    tweet text,
+    PRIMARY KEY (lang, createdat, id)
+) WITH CLUSTERING ORDER BY (createdat DESC, id DESC);
+```
+- download your database secure connect bundle and copy to [your-input-files](your-input-files)
+- create and download a 'database administrator' token csv file
+- fill in username, password, client id and client secret from the downloaded csv file in [env-file-docker](env-file-docker.TEMPLATE)
+- create streaming / create tenant
+- Create topics from-twitterapi, to-en-sentimentr and to-db
+- fill in the full names of your topics in [env-file-docker](env-file-docker)
+- get astra streaming connection details
+- click connect and get the Broker Service URL and fill in [env-file-docker](env-file-docker)
+- create a token and fill in [env-file-docker](env-file-docker)
+- pull the application container images (important to start the apps before you continue with function and sink setup!)
+```
+docker pull dieterfl/twitter-sentimentr-en-service:latest
+docker pull dieterfl/twitter-ui:latest
+docker pull dieterfl/twitter-reader:latest
+```
+- review [env-file-docker](env-file-docker.TEMPLATE) and remove the '.TEMPLATE' extension - ensure spring profile 'astra' is configured
+- start your applications
+```
+sh run-apps-in-docker.sh
+```
+- once the applications are up and running try to connect your browser to twitter-ui via browser: http://localhost:8081
+- create a sink that connects to your astra db in astra streaming
+```
+namespace = default
+sink type = astra db
+name = tweet-db-sink
+connect-topic=to-db
+database=
+keyspace=twitter
+table=tweet_by_lang
+token=Astra DB token
+mapping=lang=value.lang,id=value.id,tweet=value.tweet,createdat=value.createdAt,sentiment=value.sentiment
+```
+- Double check the mapping for createdat=value.createdAt
+- hit create
+- download [tweet-router](https://github.com/difli/twitter-sentimentr/releases/download/v1.0.0/twitter-router-0.0.1-SNAPSHOT.jar) function or use the one you have build yourself
+- create tweet-router (function) for content based routing of tweets
+```
+name=tweet-router
+namespace=default
+upload twitter-router-0.0.1-SNAPSHOT.jar
+choose function io/flickd/twitter/pulsar/functions/TweetRouter
+choose input topic=from-twitterapi
+```
+hit create
+
+- Done !!!
+- You should now see tweets appearing http://localhost:8081  

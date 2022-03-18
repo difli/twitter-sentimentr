@@ -1,0 +1,33 @@
+# set default if you want to run local. set astra if you want to run on astra
+# in case of spring_profiles_active=default no need to provide astra configs
+# default or astra
+export spring_profiles_active=default
+
+# pulsar (local) configuration
+export pulsar_service_url=pulsar://localhost:6650
+export pulsar_topic_from_twitterapi=persistent://public/default/from-twitterapi
+export pulsar_topic_to_db=persistent://public/default/to-db
+export pulsar_topic_to_en_sentimentr=persistent://public/default/to-en-sentimentr   
+
+# cassandra (local) configuration
+export cassandra_contact_points=localhost
+
+# astra streaming configuration
+export astra_streaming_service_url=pulsar+ssl://pulsar-gcp-europewest1.streaming.datastax.com:6651
+export astra_streaming_token=
+export astra_streaming_topic_from_twitterapi=persistent://dieter-sentimentr-demo/default/from-twitterapi
+export astra_streaming_topic_to_db=persistent://dieter-sentimentr-demo/default/to-db
+export astra_streaming_topic_to_en_sentimentr=persistent://dieter-sentimentr-demo/default/to-en-sentimentr
+
+# astra db configuration
+export astra_db_username=
+export astra_db_password=
+export astra_db_keyspace:twitter
+export astra_db_bundle=/Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/your-input-files/secure-connect.zip
+
+# Twitter filtered stream rule
+# https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule
+export twitter_filtered_stream_rule=bmw
+
+# twitter api credentials
+export twitter_credentials_file_path=/Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/your-input-files/twitter-credentials.json

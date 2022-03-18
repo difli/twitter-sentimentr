@@ -1,0 +1,54 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	<h1 class="page-header">Report</h1>
+	
+<div ng-controller="ReportController" ng-init="init()">
+
+    <form name="searchForm" role="form" class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="sentiment">Sentiment</label>
+            <div class="col-md-1">
+                <select class="form-control" id="sentiment" name="sentiment"
+                        ng-model="sentiment" ng-options="option for option in sentimentOptions" ng-change="refresh()"></select>
+            </div>
+            <label class="control-label col-md-2" for="language">Language</label>
+            <div class="col-md-1">
+                <select class="form-control" id="language" name="language"
+                        ng-model="language" ng-options="option for option in languageOptions" ng-change="refresh()"></select>
+            </div>
+        </div>
+    </form>
+
+<table class="table table-striped table-hover table-bordered">
+    <!-- this will build the table headers dynamically -->
+    <!-- they will populate in order of the table's schema -->
+    <tr>
+        <th> Lang 
+        </th>
+        <th> Sentiment 
+        </th>
+        <th> Timestamp 
+        </th>
+        <th> Tweets 
+        </th>
+    </tr>
+
+    <!-- replace these fields with your field names -->
+    <!-- for example: {{row.YOUR_FIELD_NAME}} -->
+    <tr data-ng-repeat="tweet_data in tweet_data">
+        <td>
+            {{tweet_data.lang}}
+        </td>
+        <td>
+            {{tweet_data.sentiment}}
+        </td>
+        <td>
+            {{tweet_data.createdAt}}
+        </td>
+        <td>
+            {{tweet_data.tweet}}
+        </td>
+    </tr>
+</table>
+
+</div>
+</div>

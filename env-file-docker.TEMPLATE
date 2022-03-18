@@ -1,0 +1,33 @@
+# set default if you want to run local. set astra if you want to run on astra
+# in case of spring_profiles_active=default no need to provide astra configs
+# default or astra
+spring_profiles_active=astra
+
+# pulsar (local) configuration
+pulsar_service_url=pulsar://host.docker.internal:6650
+pulsar_topic_from_twitterapi=persistent://public/default/from-twitterapi
+pulsar_topic_to_db=persistent://public/default/to-db
+pulsar_topic_to_en_sentimentr=persistent://public/default/to-en-sentimentr   
+
+# cassandra (local) configuration
+cassandra_contact_points=host.docker.internal
+
+# astra streaming configuration
+astra_streaming_service_url=pulsar+ssl://pulsar-gcp-europewest1.streaming.datastax.com:6651
+astra_streaming_token=
+astra_streaming_topic_from_twitterapi=persistent://dieter-sentimentr-demo/default/from-twitterapi
+astra_streaming_topic_to_db=persistent://dieter-sentimentr-demo/default/to-db
+astra_streaming_topic_to_en_sentimentr=persistent://dieter-sentimentr-demo/default/to-en-sentimentr
+
+# astra db configuration
+astra_db_username=
+astra_db_password=
+astra_db_keyspace:twitter
+astra_db_bundle=/credential-files/secure-connect.zip
+
+# Twitter filtered stream rule
+# https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule
+twitter_filtered_stream_rule=bmw
+
+# twitter api credentials
+twitter_credentials_file_path=/credential-files/twitter-credentials.json

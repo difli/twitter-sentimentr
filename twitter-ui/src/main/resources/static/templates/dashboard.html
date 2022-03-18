@@ -1,0 +1,236 @@
+
+<script type="text/javascript">
+	var entries = 0;
+	var smiley = [
+			"<img src='/img/smiley-face-sad.gif' alt=''>",
+			"<img src='/img/smiley-face-sad.gif' alt=''>",
+			"<img src='/img/smiley-face-mellow.gif' alt=''>",
+			"<img src='/img/smiley-face-smile.gif' alt=''>",
+			"<img src='/img/smiley-face-smile.gif' alt=''>" ];
+	//// Chart
+	var dpsLine = []; // dataPoints
+	var dpsColumn = [ {
+		x : 10,
+		y : 0,
+		label : "Very Negative"
+	}, {
+		x : 20,
+		y : 0,
+		label : "Negative"
+	}, {
+		x : 30,
+		y : 0,
+		label : "Neutral"
+	}, {
+		x : 40,
+		y : 0,
+		label : "Positive"
+	}, {
+		x : 50,
+		y : 0,
+		label : "Very Positive"
+	} ];
+	var lineChart;
+	var columnChart;
+
+	var dataLength = 100; // number of dataPoints visible at any point
+
+	var updateLineChart = function(xVal, yVal, tweet) {
+		dpsLine.push({
+			x : xVal,
+			y : yVal,
+			toolTipContent : tweet
+		});
+		if (dpsLine.length > dataLength) {
+			dpsLine.shift();
+		}
+
+		lineChart.render();
+
+	}
+
+	var initLineChart = function() {
+
+		lineChart = new CanvasJS.Chart("lineChartContainer", {
+			title : {
+				text : "Live Tweet Sentiment"
+			},
+			data : [ {
+				type : "line",
+				dataPoints : dpsLine
+			} ]
+		});
+
+		updateLineChart();
+	}
+
+	var updateColumnChart = function(sentiment) {
+		if (sentiment === 0) {
+			dpsColumn.splice(0, 1, {
+				x : 10,
+				y : dpsColumn[sentiment].y + 1,
+				label : "Very Negative"
+			});
+		} else if (sentiment === 1) {
+			dpsColumn.splice(1, 1, {
+				x : 20,
+				y : dpsColumn[sentiment].y + 1,
+				label : "Negative"
+			});
+		} else if (sentiment === 2) {
+			dpsColumn.splice(2, 1, {
+				x : 30,
+				y : dpsColumn[sentiment].y + 1,
+				label : "Neutral"
+			});
+		} else if (sentiment === 3) {
+			dpsColumn.splice(3, 1, {
+				x : 40,
+				y : dpsColumn[sentiment].y + 1,
+				label : "Positive"
+			});
+		} else if (sentiment === 4) {
+			dpsColumn.splice(4, 1, {
+				x : 50,
+				y : dpsColumn[sentiment].y + 1,
+				label : "Very Positive"
+			});
+		}
+
+		columnChart.render();
+	}
+
+	var initColumnChart = function() {
+		columnChart = new CanvasJS.Chart("columnChartContainer", {
+			title : {
+				text : "Tweet Sentiment Summary"
+			},
+			data : [ {
+				dataPoints : dpsColumn
+			} ]
+		});
+		columnChart.render();
+	}
+
+	function killApp() {
+		$.get("killApp", function(data) {
+			$("#content-wrapper").text(data).show().fadeOut(3000);
+		});
+	}
+	
+	function getTweetData()
+	{
+		var getJSON = function(url, successHandler, errorHandler) {
+			var xhr = typeof XMLHttpRequest != 'undefined'
+				? new XMLHttpRequest()
+				: new ActiveXObject('Microsoft.XMLHTTP');
+			xhr.open('get', url, true);
+			xhr.responseType = 'json';
+			xhr.onreadystatechange = function() {
+				var status;
+				var data;
+				// https://xhr.spec.whatwg.org/#dom-xmlhttprequest-readystate
+				if (xhr.readyState == 4) { // `DONE`
+					status = xhr.status;
+					if (status == 200) {
+						successHandler && successHandler(xhr.response);
+					} else {
+						errorHandler && errorHandler(status);
+					}
+				}
+			};
+			xhr.send();
+		};
+
+		getJSON('/tweet_data/language/en/top', function(tweet_data) {
+			
+//			for(var i=0;i<tweet_data._embedded.tweet_data.length;i++){
+	        length = tweet_data.length;
+		    for(var i=length-1;i>=0;i--){
+//			alert('Tweet: ' + tweet_data._embedded.tweet_data[i].tweet);
+			
+			var data = tweet_data[i]; 
+			if (data != "") {
+				$('#data' + entries).html(
+						"<td>" + smiley[data.sentiment] + "</td><td>"
+								+ data.createdAt + "</td><td>" + data.tweet.autoLink()
+								+ "</td>");
+				$('#tweet_tab').prepend(
+						'<tr id="data' + (entries + 1) + '"></tr>');
+				entries++;
+				updateLineChart(entries, data.sentiment, data.tweet.autoLink());
+				updateColumnChart(data.sentiment);
+			}
+
+			}
+			
+		}, function(status) {
+			alert('Something went wrong.');
+		});
+	}
+	var sock;
+
+	$(function() {
+		initLineChart();
+		initColumnChart();
+		getTweetData();
+		console.log("FUNCTION");
+		if (typeof(sock) == "undefined")
+		{
+			console.log("undefined");
+			sock = new SockJS("/events");
+		}
+
+		sock.onmessage = function(msg) {
+			var data = $.parseJSON(msg.data);
+			if (data != "") {
+				$('#data' + entries).html(
+						"<td>" + smiley[data.sentiment] + "</td><td>"
+								+ data.createdAt + "</td><td>" + data.tweet.autoLink()
+								+ "</td>");
+				$('#tweet_tab').prepend(
+						'<tr id="data' + (entries + 1) + '"></tr>');
+				entries++;
+				updateLineChart(entries, data.sentiment, data.tweet.autoLink());
+				updateColumnChart(data.sentiment);
+			}
+		};
+	});
+
+//////////// close websocket
+
+</script>
+
+
+
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	<h1 class="page-header">Dashboard</h1>
+
+	<div class="row placeholders">
+		<div class="col-xs-12 col-sm-6 placeholder">
+			<!-- chart -->
+			<div id="lineChartContainer" style="height: 300px;"></div>
+		</div>
+		<div class="col-xs-12 col-sm-6 placeholder">
+			<!-- chart -->
+			<div id="columnChartContainer" style="height: 300px;"></div>
+		</div>
+	</div>
+	<!-- Table -->
+	<div>
+		<table id="tweet_tab" class="table table-striped table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>Sentiment</th>
+					<th>Timestamp</th>
+					<th>Tweets</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr id='data0'>
+					</td>
+			</tbody>
+		</table>
+	</div>
+</div>

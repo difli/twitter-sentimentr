@@ -1,0 +1,27 @@
+server:
+  port: 8083
+
+spring:
+  profiles:
+    active:
+#    - astra
+    - default
+   
+---
+spring:
+  profiles: default
+
+pulsar:
+  service-url: ${pulsar_service_url:pulsar://localhost:6650}
+  topic.to-db: ${pulsar_topic_to_db:persistent://public/default/to-db}
+  topic.to-en-sentimentr: ${pulsar_topic_to_en_sentimentr:persistent://public/default/to-en-sentimentr}   
+
+---
+spring:
+  profiles: astra
+  
+astra-streaming:
+  service-url: ${astra_streaming_service_url:pulsar+ssl://pulsar-gcp-europewest1.streaming.datastax.com:6651}  
+  token: ${astra_streaming_token}
+  topic.to-db: ${astra_streaming_topic_to_db:persistent://dieter-test/default/to-db}
+  topic.to-en-sentimentr: ${astra_streaming_topic_to_en_sentimentr:persistent://dieter-test/default/to-en-sentimentr}

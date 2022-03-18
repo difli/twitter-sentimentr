@@ -1,0 +1,67 @@
+# install cassandra
+# start cassandra
+cd apache-cassandra-4.0.3
+bin/cassandra -f
+
+cqlsh -e CREATE KEYSPACE twitter WITH replication = { 'class': 'NetworkTopologyStrategy', 'datacenter1': 1 };
+cqlsh -e CREATE TABLE twitter.tweet_by_lang (
+    lang text,
+    createdat text,
+    id text,
+    sentiment int,
+    tweet text,
+    PRIMARY KEY (lang, createdat, id)
+) WITH CLUSTERING ORDER BY (createdat DESC, id DESC);
+cqlsh -e CREATE TABLE twitter.tweet_by_id (
+    lang text,
+    createdat text,
+    id text,
+    sentiment int,
+    tweet text,
+    PRIMARY KEY (id)
+);
+   
+# install pulsar
+# start pulsar
+cd apache-pulsar-2.8.2
+bin/pulsar standalone
+
+# create topics
+bin/pulsar-admin topics create persistent://public/default/from-twitterapi
+bin/pulsar-admin topics create persistent://public/default/to-en-sentimentr
+bin/pulsar-admin topics create persistent://public/default/to-db
+# list topics
+bin/pulsar-admin topics list public/default
+
+## NOW START YOUR APPLICATIONS
+## Once the applications subscribed and registered their schema continue here
+
+# create this folder in the pulsar base folder
+mkdir connectors
+# Download DataStax Apache Pulsar Connector: https://downloads.datastax.com/#apc
+cp ../cassandra-enhanced-pulsar-sink-1.5.0-nar.nar connectors
+
+# install DataStax Apache Pulsar Connector
+bin/pulsar-admin sinks reload
+bin/pulsar-admin sinks available-sinks
+bin/pulsar-admin sinks create --name tweet-db-sink --sink-type cassandra-enhanced --inputs persistent://public/default/to-db --sink-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/pulsar-config-files/tweet-db-sink.yml
+bin/pulsar-admin sinks list
+
+# install tweet-router (function) for content based routing of tweets
+# local
+bin/pulsar-admin functions getstatus --name tweet-router
+bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/local-function-config.yaml 
+
+# delete
+bin/pulsar-admin functions delete --name tweet-router
+bin/pulsar-admin sink delete --name tweet-db-sink
+bin/pulsar-admin schemas delete persistent://public/default/from-twitterapi
+bin/pulsar-admin schemas delete persistent://public/default/to-en-sentimentr
+bin/pulsar-admin schemas delete persistent://public/default/to-db
+bin/pulsar-admin schemas delete persistent://public/default/events-twitter.tweet_by_lang
+bin/pulsar-admin schemas delete persistent://public/default/data-twitter.tweet_by_lang
+bin/pulsar-admin topics delete persistent://public/default/events-twitter.tweet_by_lang
+bin/pulsar-admin topics delete persistent://public/default/data-twitter.tweet_by_lang
+bin/pulsar-admin topics delete persistent://public/default/from-twitterapi
+bin/pulsar-admin topics delete persistent://public/default/to-en-sentimentr
+bin/pulsar-admin topics delete persistent://public/default/to-db

@@ -1,0 +1,43 @@
+management.endpoints.web.exposure.include: '*'
+spring:
+  main.allow-circular-references: true
+  profiles:
+    active:
+    - default
+#    - astra
+      
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          servlet:
+            DispatcherServlet: INFO
+        
+server:
+  port: 8081
+
+---
+spring:
+  profiles: default
+
+pulsar:
+  service-url: ${pulsar_service_url:pulsar://localhost:6650}
+  topic.to-db: ${pulsar_topic_to_db:persistent://public/default/to-db}
+cassandra:
+  contact-points: ${cassandra_contact_points:localhost}
+  
+---
+spring:
+  profiles: astra
+  
+astra-streaming:
+  service-url: ${astra_streaming_service_url:pulsar+ssl://pulsar-gcp-europewest1.streaming.datastax.com:6651}  
+  token: ${astra_streaming_token}
+  topic.to-db: ${astra_streaming_topic_to_db:persistent://dieter-test/default/to-db}
+
+astra-db:
+  username: ${astra_db_username}
+  password: ${astra_db_password}
+  keyspace: ${astra_db_keyspace:twitter}
+  bundle: ${astra_db_bundle:/Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/your-input-files/secure-connect.zip}

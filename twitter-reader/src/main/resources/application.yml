@@ -1,0 +1,34 @@
+twitter-credentials:
+  json:
+    file: ${twitter_credentials_file_path:/Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/your-input-files/twitter-credentials.json} 
+  
+server:
+  port: 8082
+      
+spring:
+  profiles:
+    active:
+    - default
+#    - astra
+
+# Twitter filtered stream rule
+# https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule
+reader:
+  twitter-filtered-stream-rule: ${twitter_filtered_stream_rule:bmw}
+
+---
+spring:
+  profiles: default
+
+pulsar:
+  service-url: ${pulsar_service-url:pulsar://localhost:6650}
+  topic.from-twitterapi: ${pulsar_topic_from_twitterapi:persistent://public/default/from-twitterapi}
+
+---
+spring:
+  profiles: astra
+  
+astra-streaming:
+  service-url: ${astra_streaming_service_url:pulsar+ssl://pulsar-gcp-europewest1.streaming.datastax.com:6651}  
+  token: ${astra_streaming_token}
+  topic.from-twitterapi: ${astra_streaming_topic_from_twitterapi:persistent://dieter-test/default/from-twitterapi}

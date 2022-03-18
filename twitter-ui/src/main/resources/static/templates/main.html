@@ -1,0 +1,17 @@
+
+<div class="container-fluid" ng-init="init()" ng-controller="MainController">
+	<div class="row">
+		<div class="col-sm-3 col-md-2 sidebar">
+			<ul class="nav nav-sidebar">
+				<li ng-class="{active:viewName==='dashboard'}"><a href="#" ng-click="setMainView('dashboard')">Dashboard</a></li>
+				<li ng-class="{active:viewName==='report'}"><a href="#" ng-click="setMainView('report')">Report</a></li>
+				<li class="ng-hide" ng-class="{active:viewName==='analytics'}"><a href="#" ng-click="setMainView('analytics')">Analytics</a></li>
+			</ul>
+			<ul class="nav nav-sidebar-bottom">
+				
+			</ul>
+		</div>
+
+		<div ng-include src="mainView"></div>
+	</div>
+</div>

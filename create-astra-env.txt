@@ -1,0 +1,64 @@
+# ensure spring_profiles_active is set to astra in env-file-docker
+
+# use astra db
+# https://astra.datastax.com/
+
+# create database
+# create keyspace "twitter"
+# create tables
+CREATE TABLE twitter.tweet_by_lang (
+    lang text,
+    createdat text,
+    id text,
+    sentiment int,
+    tweet text,
+    PRIMARY KEY (lang, createdat, id)
+) WITH CLUSTERING ORDER BY (createdat DESC, id DESC);
+CREATE TABLE twitter.tweet_by_id (
+    lang text,
+    createdat text,
+    id text,
+    sentiment int,
+    tweet text,
+    PRIMARY KEY (id)
+);
+
+# Download your Secure Connect Bundle an copy to your-input-files
+# Generate and download database administrator token csv file   
+# Fill in details in env-file-docker (username and password is client id and client secret)
+
+# Use Astra Streaming
+# Create streaming / create tenant
+# Create topics
+from-twitterapi
+to-en-sentimentr
+to-db
+
+# fill in topic details in env-file-docker
+# get astra streaming connection details
+# click connect and get the Broker Service URL and fill in env-file-docker
+# create a token and fill in env-file-docker
+
+## NOW START YOUR APPLICATIONS
+## Once the applications subscribed and registered their schema continue here
+
+# create a sink for Astra DB in Astra Streaming
+namespace = default
+sink type = astra db
+name = tweet-db-sink
+connect-topic=to-db
+database=
+keyspace=twitter
+table=tweet_by_lang
+token=Astra DB token
+mapping=lang=value.lang,id=value.id,tweet=value.tweet,createdat=value.createdAt,sentiment=value.sentiment
+Double check the mapping for createdat=value.createdAt
+hit create
+
+# install tweet-router (function) for content based routing of tweets
+name=tweet-router
+namespace=default
+upload twitter-router-0.0.1-SNAPSHOT.jar
+choose function io/flickd/twitter/pulsar/functions/TweetRouter
+choose input topic=from-twitterapi
+hit create

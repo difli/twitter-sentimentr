@@ -44,7 +44,8 @@ bin/cassandra -f
 ```
 - create keyspace and table
 ```
-cqlsh -e CREATE KEYSPACE twitter WITH replication = { 'class': 'NetworkTopologyStrategy', 'datacenter1': 1 };
+cqlsh
+CREATE KEYSPACE twitter WITH replication = { 'class': 'NetworkTopologyStrategy', 'datacenter1': 1 };
 cqlsh -e CREATE TABLE twitter.tweet_by_lang (
     lang text,
     createdat text,
@@ -53,6 +54,15 @@ cqlsh -e CREATE TABLE twitter.tweet_by_lang (
     tweet text,
     PRIMARY KEY (lang, createdat, id)
 ) WITH CLUSTERING ORDER BY (createdat DESC, id DESC);
+CREATE TABLE twitter.tweet_by_id (
+    lang text,
+    createdat text,
+    id text,
+    sentiment int,
+    tweet text,
+    PRIMARY KEY (id)
+);
+exit
 ```
 - download [apache pulsar](https://archive.apache.org/dist/pulsar/pulsar-2.8.2/apache-pulsar-2.8.2-bin.tar.gz)
 - install pulsar   
@@ -111,7 +121,7 @@ workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.
 # Quickstart powered by astra   
 - create your astra account: https://astra.datastax.com/
 - create database with keyspace 'twitter'
-- use cql concole and create table
+- use cql concole and create tables
 ```
 CREATE TABLE twitter.tweet_by_lang (
     lang text,
@@ -121,6 +131,14 @@ CREATE TABLE twitter.tweet_by_lang (
     tweet text,
     PRIMARY KEY (lang, createdat, id)
 ) WITH CLUSTERING ORDER BY (createdat DESC, id DESC);
+CREATE TABLE twitter.tweet_by_id (
+    lang text,
+    createdat text,
+    id text,
+    sentiment int,
+    tweet text,
+    PRIMARY KEY (id)
+);
 ```
 - download your database secure connect bundle and copy to [your-input-files](your-input-files)
 - create and download a 'database administrator' token csv file

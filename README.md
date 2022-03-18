@@ -1,8 +1,8 @@
 # twitter-sentimentr
 
 Sentiment analysis of twitter tweets powered by spring boot based applications and
-- [local installation of apache cassandra and pulsar](Quickstart:-local-environment-setup) or
-- [Astra DB and Astra Streaming](Quickstart:-powered-by-Astra).
+- [local installation of apache cassandra and pulsar](Quickstart-local-environment-setup) or
+- [Astra DB and Astra Streaming](Quickstart-powered-by-astra).
 
 ![alt text](/images/twitter-sentimentr.png)
 
@@ -34,7 +34,7 @@ Sentiment analysis of twitter tweets powered by spring boot based applications a
 - please, create a twitter developer account in order to edit your [credentials](your-input-files/twitter-credentials.json.TEMPLATE) for accessing the twitter api:  https://developer.twitter.com/en/apps. remove extension '.TEMPLATE' from the file
 - you can adapt [twitter filtered stream rule](https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule). Define it [here](env-file-docker.TEMPLATE). This to define a pattern for tweets to collect from twitter.   
 
-# Quickstart: local environment setup  
+# Quickstart local environment setup  
 - download [apache cassandra](https://dlcdn.apache.org/cassandra/4.0.3/apache-cassandra-4.0.3-bin.tar.gz)
 - install cassandra
 - start cassandra
@@ -108,7 +108,7 @@ workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.
 - Done !!!
 - You should now see tweets appearing http://localhost:8081  
 
-# Quickstart: powered by Astra   
+# Quickstart powered by astra   
 - create your astra account: https://astra.datastax.com/
 - create database with keyspace 'twitter'
 - use cql concole and create table

@@ -52,24 +52,6 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Stanford CoreNLP -->
-		<dependency>
-			<groupId>edu.stanford.nlp</groupId>
-			<artifactId>stanford-corenlp</artifactId>
-			<version>${corenlp.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>edu.stanford.nlp</groupId>
-			<artifactId>stanford-corenlp</artifactId>
-			<version>${corenlp.version}</version>
-			<classifier>models</classifier>
-		</dependency>
-		<!-- Twitter Text -->
-		<dependency>
-			<groupId>com.twitter</groupId>
-			<artifactId>twitter-text</artifactId>
-			<version>${twitter.text.version}</version>
-		</dependency>
 		
 	</dependencies>
 

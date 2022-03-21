@@ -29,6 +29,7 @@ Sentiment analysis of twitter tweets powered by spring boot based applications a
 - subscribes to to-db topic and sends englisch tweets in realtime via websocket to all connected browsers.
 - connects to apache cassandra to query tweets and sentiment over all languages
 - visualizes tweets and the calculated sentiment
+![alt text](/images/twitter-ui.png)
 
 # Prerequisites
 - please, create a twitter developer account in order to edit your [credentials](your-input-files/twitter-credentials.json.TEMPLATE) for accessing the twitter api:  https://developer.twitter.com/en/apps. remove extension '.TEMPLATE' from the file

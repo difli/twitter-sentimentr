@@ -1,8 +1,9 @@
 # twitter-sentimentr
 
-Sentiment analysis of twitter tweets powered by spring boot based applications and
-- [local installation of apache cassandra and pulsar](#Quickstart-local-environment-setup) or
-- [Astra DB and Astra Streaming](#Quickstart-powered-by-astra).
+Sentiment analysis of twitter tweets powered by
+- [apache cassandra and apache pulsar local](#Quickstart-local-environment-setup) or by
+- [Astra DB and Astra Streaming](#Quickstart-powered-by-astra) and
+- spring boot based applications 
 
 ![alt text](/images/twitter-sentimentr.png)
 

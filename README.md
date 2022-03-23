@@ -3,7 +3,7 @@
 Sentiment analysis of twitter tweets powered by
 - [apache cassandra and apache pulsar local](#Quickstart-local-environment-setup) or by
 - [Astra DB and Astra Streaming](#Quickstart-powered-by-astra) and
-- spring boot based applications 
+- spring boot based applications
 
 ![alt text](/images/twitter-sentimentr.png)
 
@@ -114,8 +114,11 @@ bin/pulsar-admin sinks list
 - download [tweet-router](https://github.com/difli/twitter-sentimentr/releases/download/v1.0.0/twitter-router-0.0.1-SNAPSHOT.jar) function or use the one you have build yourself
 - create the tweet-router function (adapt the command line properties)
 ```
-bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/bin/pulsar-admin functions getstatus --name tweet-router
-workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/local-function-config.yaml
+bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/local-function-config.yaml
+```
+- check the function status
+```
+bin/pulsar-admin functions getstatus --name tweet-router
 ```
 - Done !!!
 - You should now see tweets appearing http://localhost:8081  

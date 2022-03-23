@@ -50,7 +50,7 @@ bin/pulsar-admin sinks list
 # install tweet-router (function) for content based routing of tweets
 # local
 bin/pulsar-admin functions getstatus --name tweet-router
-bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/local-function-config.yaml 
+bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/local-function-config.yaml 
 
 # delete
 bin/pulsar-admin functions delete --name tweet-router

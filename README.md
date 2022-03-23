@@ -114,7 +114,7 @@ bin/pulsar-admin sinks list
 - download [tweet-router](https://github.com/difli/twitter-sentimentr/releases/download/v1.0.0/twitter-router-0.0.1-SNAPSHOT.jar) function or use the one you have build yourself
 - create the tweet-router function (adapt the command line properties)
 ```
-bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/tweet-router/local-function-config.yaml
+bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/local-function-config.yaml 
 ```
 - check the function status
 ```

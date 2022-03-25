@@ -114,7 +114,7 @@ bin/pulsar-admin sinks list
 - download [tweet-router](https://github.com/difli/twitter-sentimentr/releases/download/v1.0.0/twitter-router-0.0.1-SNAPSHOT.jar) function or use the one you have build yourself
 - create the tweet-router function (adapt the command line properties)
 ```
-bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/local-function-config.yaml 
+bin/pulsar-admin functions create --jar /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/target/twitter-router-0.0.1-SNAPSHOT.jar --function-config-file /Users/dieter.flick/Documents/development/workspaces/workspace-datastax/twitter-sentimentr/twitter-router-function/local-function-config.yaml
 ```
 - check the function status
 ```
@@ -166,15 +166,29 @@ docker pull dieterfl/twitter-reader:latest
 sh run-apps-in-docker.sh
 ```
 - once the applications are up and running try to connect your browser to twitter-ui via browser: http://localhost:8081
-- create a sink that connects to your astra db in astra streaming
+- create a sink that ingests data in astra db tweet_by_lang table
 ```
 namespace = default
 sink type = astra db
-name = tweet-db-sink
+name = db-sink-1
 connect-topic=to-db
 database=
 keyspace=twitter
 table=tweet_by_lang
+token=Astra DB token
+mapping=lang=value.lang,id=value.id,tweet=value.tweet,createdat=value.createdAt,sentiment=value.sentiment
+```
+- Double check the mapping for createdat=value.createdAt
+- hit create
+- create another sink that ingests data in astra db tweet_by_id table
+```
+namespace = default
+sink type = astra db
+name = db-sink-2
+connect-topic=to-db
+database=
+keyspace=twitter
+table=tweet_by_id
 token=Astra DB token
 mapping=lang=value.lang,id=value.id,tweet=value.tweet,createdat=value.createdAt,sentiment=value.sentiment
 ```

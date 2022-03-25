@@ -39,3 +39,5 @@ env-file-without-docker
 env-file-docker
 your-input-files/secure-connect.zip
 your-input-files/twitter-credentials.json
+GeneratedToken**
+credentials**

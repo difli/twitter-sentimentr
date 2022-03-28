@@ -48,7 +48,7 @@ bin/cassandra -f
 ```
 cqlsh
 CREATE KEYSPACE twitter WITH replication = { 'class': 'NetworkTopologyStrategy', 'datacenter1': 1 };
-cqlsh -e CREATE TABLE twitter.tweet_by_lang (
+CREATE TABLE twitter.tweet_by_lang (
     lang text,
     createdat text,
     id text,
